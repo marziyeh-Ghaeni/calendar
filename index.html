@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>calender</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body{
+            display:flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background-color: antiquewhite;
+        }
+        .container{
+            width: 450px;
+            background-color: aliceblue;
+            border-radius: 10px;
+        }
+        .container header{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 25px 30px 10px;
+        }
+        .calendar{
+            padding: 20px;
+        }
+        .calendar .weeks li{
+            font-weight: bold;
+        }
+        .calendar .days{
+            margin-bottom: 20px;
+        }
+        .calendar .days li{
+            margin-top: 30px;
+            cursor: pointer;
+            z-index: 1;
+        }
+        .calendar ul{
+            display: flex;
+            list-style: none;
+            flex-wrap: wrap;
+            text-align: center;
+        }
+        header .today{
+            font-size: 1.45rem;
+            font-weight: 500;
+        }
+        header .icons span{
+            height: 38px;
+            width: 38px;
+            margin: 0 1px;
+            text-align: center;
+            padding: 5px;
+            color: #878787;
+            line-height: 38px;
+            border-radius: 5%;
+            cursor: pointer;
+        }
+        header .icons span:first-child{
+           margin-right: 20px;
+        }
+        header .icons span:hover{
+            background-color:#ccc;
+        }
+        .calendar ul li{
+            position: relative;
+            width: calc(100%/7);
+        }
+        .calendar .days li::before{
+            position: absolute;
+            content: "";
+            height: 40px;
+            width: 40px;
+            top:50%;
+            left: 50%;
+           z-index: -1;
+            transform: translate(-50%,-50%);
+            border-radius: 50%;
+
+        }
+        .days li:hover::before{
+            background-color: #ccc;
+        }
+        .inactive{
+            color: #aaa;
+        }
+        .active:before{
+            background-color: antiquewhite;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <p class="today">1اردیبهشت</p>
+            <div class="icons">
+                <span id="left"><</span>
+                <span id="right"> ></span>
+            </div>
+        </header>
+        <div class="calendar">
+            <ul class="weeks">
+                <li>ج</li>
+                <li>پ</li>
+                <li>چ</li>
+                <li>س</li>
+                <li>د</li>
+                <li>ی</li>
+                <li>ش</li>
+            </ul>
+            <ul class="days"></ul>
+        </div>
+    </div>
+    <script src="persian-date.js"></script>
+    <script src="https://unpkg.com/jalali-moment/dist/jalali-moment.browser.js"></script>
+    <script>
+        let today=document.querySelector(".today");
+        let days=document.querySelector(".days");
+        let prevMonthIcon=document.querySelector("#left");
+        let nextMonthIcon=document.querySelector("#right");
+        now = moment();
+        //گرفتن سال و ماه فعلی
+        let currYear= moment().locale('fa').format('YYYY');
+        let currMonth=moment().locale('fa').format('YY');
+        let lastOfMonth;
+        let currDay=moment().locale('fa').format('DD');
+        console.log(currDay)
+        const months=["فروردین","اردیبهشت","خرداد","تیر","مرداد","شهریور","مهر","آبان","آذر","دی","بهمن","اسفند"];
+        function calendar(){
+            if(currMonth>=1&&currMonth<=6){
+
+                lastOfMonth=31;
+            }else if(currMonth>=7&&currMonth<=11){
+                lastOfMonth=30;
+            }else{
+                lastOfMonth=29;
+            }
+            let createLi="";
+            for(let i=1;i<=lastOfMonth;i++){
+                if(i==currDay&&currMonth=="02"){
+                    createLi+='<li class="active">'+i+'</li>';
+                }else{
+                    createLi+='<li>'+i+'</li>';
+                }
+            }
+            today.innerHTML=currYear+"  "+months[currMonth-1];
+            days.innerHTML=createLi;
+        }
+        prevMonthIcon.addEventListener("click",()=>{
+            currMonth=currMonth-1;
+            calendar();
+        })
+        nextMonthIcon.addEventListener("click",()=>{
+            currMonth=currMonth+1;
+            calendar();
+        })
+        calendar();
+    </script>
+</body>
+</html>
